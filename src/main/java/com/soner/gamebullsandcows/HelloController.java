@@ -1,5 +1,7 @@
 package com.soner.gamebullsandcows;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -7,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 
 
@@ -25,7 +28,7 @@ public class HelloController {
     private TableColumn<?, ?> colCows;
 
     @FXML
-    private TableColumn<?, ?> colGuess;
+    private TableColumn<TahminModel, String> colGuess;
 
     @FXML
     private TableColumn<?, ?> colTurn;
@@ -36,15 +39,42 @@ public class HelloController {
     @FXML
     private Label lblStatus;
 
+    // FXML'deki TableView ve TableColumn bileşenlerini bağlıyoruz.
+    // <TahminModel, ...> ifadesi, bu tablonun TahminModel nesnelerini listeleyeceğini belirtir.
+    // JavaFX'te tablolar dinamik listeleri (ObservableList) takip eder.
+    private ObservableList<TahminModel> tahminListesi = FXCollections.observableArrayList();
+
     @FXML
-    private TableView<?> tblHistory;
+    private TableView<TahminModel> tblHistory;
 
     @FXML
     private TextField txtGuess;
 
     @FXML
+    public void initialize() {
+        // 1. Tablo Sütunu ile Model Sınıfını birbirine bağlıyoruz.
+        // "tahmin" yazısı, TahminModel sınıfındaki "getTahmin()" metoduna işaret eder.
+        colGuess.setCellValueFactory(new PropertyValueFactory<>("tahmin"));
+
+        // 2. Oluşturduğumuz listeyi tabloya kaynak olarak gösteriyoruz.
+        tblHistory.setItems(tahminListesi);
+    }
+
+    @FXML
     void onGuessSubmit(ActionEvent event) {
         System.out.println("onGuessSubmit butonuna tıklandı");
+
+        // 1. TextField'dan veriyi oku (Hiçbir kontrol yapmadan)
+        String girilenVeri = txtGuess.getText();
+
+        // 2. Bu veriyle yeni bir model nesnesi oluştur
+        TahminModel yeniTahmin = new TahminModel(girilenVeri);
+
+        // 3. Nesneyi listeye ekle (Tablo otomatik olarak güncellenecektir)
+        tahminListesi.add(yeniTahmin);
+
+        // 4. Kullanıcı kolaylığı için TextField'ı temizle
+        txtGuess.clear();
 
     }//end onGuessSubmit
 
