@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="850.0" style="-fx-background-color: #2F3437;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.soner.gamebullsandcows.HelloController">
+
+    <!-- ÜST PANEL: Başlık ve Oyun Durumu -->
+    <top>
+        <VBox alignment="CENTER" spacing="10.0" style="-fx-background-color: #1A1D20;" BorderPane.alignment="CENTER">
+            <children>
+                <Label text="BULLS AND COWS" textFill="#00ADB5">
+                    <font>
+                        <Font name="Segoe UI Bold" size="28.0" />
+                    </font>
+                </Label>
+                <Label fx:id="lblStatus" text="4 Basamaklı benzersiz bir sayı tahmin edin!" textFill="#EEEEEE">
+                    <font>
+                        <Font name="Segoe UI" size="14.0" />
+                    </font>
+                </Label>
+            </children>
+            <padding>
+                <Insets bottom="15.0" top="15.0" />
+            </padding>
+        </VBox>
+    </top>
+
+    <!-- MERKEZ PANEL: Tahmin Girişi ve Geçmiş Tablosu -->
+    <center>
+        <VBox spacing="20.0" BorderPane.alignment="CENTER">
+            <children>
+
+                <!-- Tahmin Giriş Alanı -->
+                <HBox alignment="CENTER" spacing="15.0" style="-fx-background-color: #3F4448; -fx-background-radius: 10;">
+                    <children>
+                        <Label text="Tahmininiz:" textFill="#EEEEEE">
+                            <font>
+                                <Font name="Segoe UI Semibold" size="16.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="txtGuess" prefHeight="40.0" prefWidth="150.0" promptText="Örn: 1234" style="-fx-background-color: #222831; -fx-text-fill: white; -fx-background-radius: 5; -fx-border-color: #00ADB5; -fx-border-radius: 5;">
+                            <font>
+                                <Font name="Segoe UI Bold" size="18.0" />
+                            </font>
+                        </TextField>
+                        <Button fx:id="btnGuess" mnemonicParsing="false" onAction="#onGuessSubmit" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: #00ADB5; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand;" text="TAHMİN ET">
+                            <font>
+                                <Font name="Segoe UI Bold" size="13.0" />
+                            </font>
+                        </Button>
+                    </children>
+                    <padding>
+                        <Insets bottom="15.0" top="15.0" />
+                    </padding>
+                </HBox>
+
+                <!-- Eski Tahminler Tablosu -->
+                <VBox spacing="5.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <Label text="Tahmin Geçmişi" textFill="#00ADB5">
+                            <font>
+                                <Font name="Segoe UI Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <TableView fx:id="tblHistory" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #3F4448; -fx-base: #2F3437;" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colTurn" prefWidth="75.0" style="-fx-alignment: CENTER;" text="Sıra" />
+                                <TableColumn fx:id="colGuess" prefWidth="150.0" style="-fx-alignment: CENTER; -fx-font-weight: bold;" text="Tahmin" />
+                                <TableColumn fx:id="colBulls" prefWidth="100.0" style="-fx-alignment: CENTER; -fx-text-fill: #393E46;" text="Boğa (+)" />
+                                <TableColumn fx:id="colCows" prefWidth="100.0" style="-fx-alignment: CENTER;" text="İnek (-)" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                    </children>
+                </VBox>
+            </children>
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+        </VBox>
+    </center>
+
+    <!-- SAĞ PANEL: Rakam Eleme ve İşaretleme Alanı (Scratchpad) -->
+    <right>
+        <VBox alignment="TOP_CENTER" prefWidth="280.0" spacing="15.0" style="-fx-background-color: #222831;" BorderPane.alignment="CENTER">
+            <children>
+                <Label text="Rakam Takibi" textFill="#00ADB5">
+                    <font>
+                        <Font name="Segoe UI Bold" size="16.0" />
+                    </font>
+                </Label>
+                <Label text="İpucu: Sayıda kesin olanları yeşil, olmayanları kırmızı yapmak için butonlara tıklayın." textAlignment="CENTER" textFill="#B2B2B2" wrapText="true">
+                    <font>
+                        <Font name="Segoe UI Italic" size="11.0" />
+                    </font>
+                </Label>
+
+                <!-- 0-9 Arası Rakam Butonları Grid Düzeni -->
+                <GridPane fx:id="gridNumbers" hgap="10.0" vgap="10.0">
+                    <!-- Butonlar Controller tarafında veya dinamik eklenebilir, şıklık adına taslak olarak buraya eklenmiştir -->
+                    <children>
+                        <!-- Örnek bir buton yapısı (Controller'da döngüyle üretmek daha temizdir ancak FXML görünümü için): -->
+                        <!-- Gerçek uygulamada bunları tek tek yazmak yerine controller'da Initialize anında dinamik üretebilirsiniz. -->
+                    </children>
+                </GridPane>
+
+                <!-- Alternatif pratik liste (VBox içi yatay butonlar) -->
+                <VBox alignment="CENTER" spacing="8.0" style="-fx-background-color: #3F4448; -fx-background-radius: 8;">
+                    <padding>
+                        <Insets bottom="15.0" left="10.0" right="10.0" top="15.0" />
+                    </padding>
+                    <children>
+                        <Label text="Rakam Durumları" textFill="#EEEEEE">
+                            <font>
+                                <Font name="Segoe UI Bold" size="13.0" />
+                            </font>
+                        </Label>
+                        <!-- 0-4 Arası -->
+                        <HBox alignment="CENTER" spacing="5.0">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="0" prefWidth="40"/>
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="1" prefWidth="40"/>
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="2" prefWidth="40"/>
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="3" prefWidth="40"/>
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="4" prefWidth="40"/>
+                            </children>
+                        </HBox>
+                        <!-- 5-9 Arası -->
+                        <HBox alignment="CENTER" spacing="5.0">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="5" prefWidth="40"/>
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="6" prefWidth="40"/>
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="7" prefWidth="40"/>
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="8" prefWidth="40"/>
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="9" prefWidth="40"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+                <Button fx:id="btnReset" mnemonicParsing="false" onAction="#onResetGame" prefHeight="35.0" prefWidth="200.0" style="-fx-background-color: #D9534F; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand;" text="YENİ OYUN">
+                    <font>
+                        <Font name="Segoe UI Bold" size="13.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets top="30.0" />
+                    </VBox.margin>
+                </Button>
+            </children>
+            <padding>
+                <Insets bottom="20.0" left="15.0" right="15.0" top="20.0" />
+            </padding>
+        </VBox>
+    </right>
+</BorderPane>
