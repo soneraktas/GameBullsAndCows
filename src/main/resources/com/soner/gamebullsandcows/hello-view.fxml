@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="850.0" style="-fx-background-color: #2F3437;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.soner.gamebullsandcows.HelloController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="850.0" style="-fx-background-color: #2F3437;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.soner.gamebullsandcows.HelloController">
 
     <!-- ÜST PANEL: Başlık ve Oyun Durumu -->
     <top>
@@ -23,7 +23,7 @@
                         <Font name="Segoe UI Bold" size="28.0" />
                     </font>
                 </Label>
-                <Label fx:id="lblStatus" text="4 Basamaklı benzersiz bir sayı tahmin edin!" textFill="#EEEEEE">
+                <Label fx:id="lblStatus" text="4 Basamaklı rakamları farklı  bir tam sayı tahmin edin!" textFill="#EEEEEE">
                     <font>
                         <Font name="Segoe UI" size="14.0" />
                     </font>
@@ -130,21 +130,21 @@
                         <!-- 0-4 Arası -->
                         <HBox alignment="CENTER" spacing="5.0">
                             <children>
-                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="0" prefWidth="40"/>
-                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="1" prefWidth="40"/>
-                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="2" prefWidth="40"/>
-                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="3" prefWidth="40"/>
-                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="4" prefWidth="40"/>
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" prefWidth="40" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="0" />
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" prefWidth="40" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="1" />
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" prefWidth="40" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="2" />
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" prefWidth="40" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="3" />
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" prefWidth="40" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="4" />
                             </children>
                         </HBox>
                         <!-- 5-9 Arası -->
                         <HBox alignment="CENTER" spacing="5.0">
                             <children>
-                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="5" prefWidth="40"/>
-                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="6" prefWidth="40"/>
-                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="7" prefWidth="40"/>
-                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="8" prefWidth="40"/>
-                                <Button mnemonicParsing="false" onAction="#onNumberToggle" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="9" prefWidth="40"/>
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" prefWidth="40" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="5" />
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" prefWidth="40" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="6" />
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" prefWidth="40" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="7" />
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" prefWidth="40" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="8" />
+                                <Button mnemonicParsing="false" onAction="#onNumberToggle" prefWidth="40" style="-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;" text="9" />
                             </children>
                         </HBox>
                     </children>

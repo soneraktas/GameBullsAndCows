@@ -52,6 +52,25 @@ public class HelloController {
     void onNumberToggle(ActionEvent event) {
         System.out.println("onNumberToggle butonuna tıklandı");
 
+        // Tıklanan butonu event üzerinden yakalıyoruz
+        Button clickedButton = (Button) event.getSource();
+
+        // Butonun mevcut arka plan rengini stil metninden kontrol ediyoruz
+        String currentStyle = clickedButton.getStyle();
+
+        if (currentStyle.contains("#393E46") || currentStyle.isEmpty()) {
+            // 1. Tıklama: Rakam VAR (Yeşil yap)
+            clickedButton.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
+        } else if (currentStyle.contains("#2ecc71")) {
+            // 2. Tıklama: Rakam YOK (Kırmızı yap)
+            clickedButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
+        } else {
+            // 3. Tıklama: Başa Dön (Eski nötr rengi)
+            clickedButton.setStyle("-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
+        }//end else
+
+    // ... diğer metodların ...
+
     }//end onNumberToggle
 
     @FXML
