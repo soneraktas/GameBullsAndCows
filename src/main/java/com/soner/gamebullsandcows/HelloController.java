@@ -73,6 +73,7 @@ public class HelloController {
 
     }//end onNumberToggle
 
+
     @FXML
     void onResetGame(ActionEvent event) {
         System.out.println("onResetGame butonuna tılandı");
