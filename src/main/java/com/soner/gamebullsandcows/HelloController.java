@@ -30,8 +30,12 @@ public class HelloController {
     @FXML
     private TableColumn<TahminModel, String> colGuess;
 
+    // 1. FXML'deki Sıra sütununu bağlıyoruz (Integer değer göstereceği için <TahminModel, Integer>)
     @FXML
-    private TableColumn<?, ?> colTurn;
+    private TableColumn<TahminModel, Integer> colTurn;
+
+    // 2. Hamle sayısını hafızada tutacak sayaç değişkenimiz
+    private int hamleSayaci = 1;
 
     @FXML
     private GridPane gridNumbers;
@@ -56,6 +60,9 @@ public class HelloController {
         // "tahmin" yazısı, TahminModel sınıfındaki "getTahmin()" metoduna işaret eder.
         colGuess.setCellValueFactory(new PropertyValueFactory<>("tahmin"));
 
+        // Sıra sütunu ile Modeldeki "getSira()" metodunu bağlıyoruz
+        colTurn.setCellValueFactory(new PropertyValueFactory<>("sira"));
+
         // 2. Oluşturduğumuz listeyi tabloya kaynak olarak gösteriyoruz.
         tblHistory.setItems(tahminListesi);
     }
@@ -68,10 +75,13 @@ public class HelloController {
         String girilenVeri = txtGuess.getText();
 
         // 2. Bu veriyle yeni bir model nesnesi oluştur
-        TahminModel yeniTahmin = new TahminModel(girilenVeri);
+        TahminModel yeniTahmin = new TahminModel(hamleSayaci,girilenVeri);
 
         // 3. Nesneyi listeye ekle (Tablo otomatik olarak güncellenecektir)
         tahminListesi.add(yeniTahmin);
+
+        // 4. Bir sonraki tahmin için sayacı 1 artırıyoruz
+        hamleSayaci++;
 
         // 4. Kullanıcı kolaylığı için TextField'ı temizle
         txtGuess.clear();
@@ -107,6 +117,10 @@ public class HelloController {
     @FXML
     void onResetGame(ActionEvent event) {
         System.out.println("onResetGame butonuna tılandı");
+        tahminListesi.clear();
+        hamleSayaci = 1; // Sayacı başa sarıyoruz
+        // ... diğer sıfırlama işlemleri ...
+
 
     }//end onResetGame
 
