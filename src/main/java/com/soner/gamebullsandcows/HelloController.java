@@ -1,127 +1,137 @@
 package com.soner.gamebullsandcows;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.util.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class HelloController {
 
-    @FXML
-    private Button btnGuess;
+    @FXML private Label lblStatus;
+    @FXML private TextField txtGuess;
+    @FXML private Button btnGuess;
+    @FXML private TableView<TahminModel> tblHistory;
+    @FXML private TableColumn<TahminModel, Integer> colTurn;
+    @FXML private TableColumn<TahminModel, String> colGuess;
+    @FXML private TableColumn<TahminModel, Integer> colBulls;
+    @FXML private TableColumn<TahminModel, Integer> colCows;
 
-    @FXML
-    private Button btnReset;
+    // Rakam butonlarını sıfırlayabilmek için üst konteynırı bağlamalıyız (FXML'de VBox'a fx:id="vboxNumbers" verebilirsin)
+    // Ya da sadece onReset içinde listeyi temizlemek yeterli olacaktır.
 
-    @FXML
-    private TableColumn<?, ?> colBulls;
-
-    @FXML
-    private TableColumn<?, ?> colCows;
-
-    @FXML
-    private TableColumn<TahminModel, String> colGuess;
-
-    // 1. FXML'deki Sıra sütununu bağlıyoruz (Integer değer göstereceği için <TahminModel, Integer>)
-    @FXML
-    private TableColumn<TahminModel, Integer> colTurn;
-
-    // 2. Hamle sayısını hafızada tutacak sayaç değişkenimiz
+    private String hedefSayi;
     private int hamleSayaci = 1;
-
-    @FXML
-    private GridPane gridNumbers;
-
-    @FXML
-    private Label lblStatus;
-
-    // FXML'deki TableView ve TableColumn bileşenlerini bağlıyoruz.
-    // <TahminModel, ...> ifadesi, bu tablonun TahminModel nesnelerini listeleyeceğini belirtir.
-    // JavaFX'te tablolar dinamik listeleri (ObservableList) takip eder.
+    private int saniye = 0;
+    private Timeline timeline;
     private ObservableList<TahminModel> tahminListesi = FXCollections.observableArrayList();
 
     @FXML
-    private TableView<TahminModel> tblHistory;
-
-    @FXML
-    private TextField txtGuess;
-
-    @FXML
     public void initialize() {
-        // 1. Tablo Sütunu ile Model Sınıfını birbirine bağlıyoruz.
-        // "tahmin" yazısı, TahminModel sınıfındaki "getTahmin()" metoduna işaret eder.
-        colGuess.setCellValueFactory(new PropertyValueFactory<>("tahmin"));
-
-        // Sıra sütunu ile Modeldeki "getSira()" metodunu bağlıyoruz
         colTurn.setCellValueFactory(new PropertyValueFactory<>("sira"));
+        colGuess.setCellValueFactory(new PropertyValueFactory<>("tahmin"));
+        colBulls.setCellValueFactory(new PropertyValueFactory<>("bulls"));
+        colCows.setCellValueFactory(new PropertyValueFactory<>("cows"));
 
-        // 2. Oluşturduğumuz listeyi tabloya kaynak olarak gösteriyoruz.
         tblHistory.setItems(tahminListesi);
+
+        setupTimer();
+        yeniOyunBaslat();
+    }
+
+    private void setupTimer() {
+        if (timeline != null) timeline.stop();
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            saniye++;
+            lblStatus.setText("Süre: " + saniye + " sn | Tahmin yapın!");
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+    }
+
+    private void yeniOyunBaslat() {
+        tahminListesi.clear();
+        hamleSayaci = 1;
+        saniye = 0;
+        sayiUret();
+        timeline.playFromStart();
+        btnGuess.setDisable(false);
+        txtGuess.clear();
+        lblStatus.setText("Yeni oyun başladı! 4 basamaklı sayı girin.");
+    }
+
+    private void sayiUret() {
+        ArrayList<Integer> rakamlar = new ArrayList<>();
+        for (int i = 0; i <= 9; i++) rakamlar.add(i);
+        do {
+            Collections.shuffle(rakamlar);
+        } while (rakamlar.get(0) == 0);
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 4; i++) sb.append(rakamlar.get(i));
+        hedefSayi = sb.toString();
+        System.out.println("Hedef: " + hedefSayi);
     }
 
     @FXML
     void onGuessSubmit(ActionEvent event) {
-        System.out.println("onGuessSubmit butonuna tıklandı");
+        String tahmin = txtGuess.getText();
 
-        // 1. TextField'dan veriyi oku (Hiçbir kontrol yapmadan)
-        String girilenVeri = txtGuess.getText();
+        if (tahmin.length() != 4 || !tahmin.matches("\\d+")) {
+            lblStatus.setText("Hata: Sadece 4 basamaklı sayı!");
+            return;
+        }
 
-        // 2. Bu veriyle yeni bir model nesnesi oluştur
-        TahminModel yeniTahmin = new TahminModel(hamleSayaci,girilenVeri);
+        int b = 0, c = 0;
+        for (int i = 0; i < 4; i++) {
+            char t = tahmin.charAt(i);
+            if (t == hedefSayi.charAt(i)) b++;
+            else if (hedefSayi.contains(String.valueOf(t))) c++;
+        }
 
-        // 3. Nesneyi listeye ekle (Tablo otomatik olarak güncellenecektir)
-        tahminListesi.add(yeniTahmin);
-
-        // 4. Bir sonraki tahmin için sayacı 1 artırıyoruz
-        hamleSayaci++;
-
-        // 4. Kullanıcı kolaylığı için TextField'ı temizle
+        tahminListesi.add(0, new TahminModel(hamleSayaci++, tahmin, b, c));
         txtGuess.clear();
 
-    }//end onGuessSubmit
+        if (b == 4) {
+            timeline.stop();
+            lblStatus.setText("TEBRİKLER! Sayı: " + hedefSayi);
+            btnGuess.setDisable(true);
+            skorKaydet(saniye, hamleSayaci - 1);
+        }
+    }
+
+    private void skorKaydet(int sure, int hamle) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Vildan Koleji - Oyun Bitti");
+        alert.setHeaderText("Harika İş çıkardın!");
+        alert.setContentText("Süre: " + sure + " saniye\nHamle: " + hamle + "\n\nYeni bir rekor için tekrar dene!");
+        alert.showAndWait();
+    }
 
     @FXML
     void onNumberToggle(ActionEvent event) {
-        System.out.println("onNumberToggle butonuna tıklandı");
+        Button btn = (Button) event.getSource();
+        String style = btn.getStyle();
 
-        // Tıklanan butonu event üzerinden yakalıyoruz
-        Button clickedButton = (Button) event.getSource();
-
-        // Butonun mevcut arka plan rengini stil metninden kontrol ediyoruz
-        String currentStyle = clickedButton.getStyle();
-
-        if (currentStyle.contains("#393E46") || currentStyle.isEmpty()) {
-            // 1. Tıklama: Rakam VAR (Yeşil yap)
-            clickedButton.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
-        } else if (currentStyle.contains("#2ecc71")) {
-            // 2. Tıklama: Rakam YOK (Kırmızı yap)
-            clickedButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
+        if (style.contains("#393E46") || style.isEmpty()) {
+            btn.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold;");
+        } else if (style.contains("#2ecc71")) {
+            btn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
         } else {
-            // 3. Tıklama: Başa Dön (Eski nötr rengi)
-            clickedButton.setStyle("-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
-        }//end else
-
-    // ... diğer metodların ...
-
-    }//end onNumberToggle
-
+            btn.setStyle("-fx-background-color: #393E46; -fx-text-fill: white; -fx-font-weight: bold;");
+        }
+    }
 
     @FXML
     void onResetGame(ActionEvent event) {
-        System.out.println("onResetGame butonuna tılandı");
-        tahminListesi.clear();
-        hamleSayaci = 1; // Sayacı başa sarıyoruz
-        // ... diğer sıfırlama işlemleri ...
-
-
-    }//end onResetGame
-
-}//end class
+        yeniOyunBaslat();
+    }
+}

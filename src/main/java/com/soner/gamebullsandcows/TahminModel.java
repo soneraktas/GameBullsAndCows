@@ -1,25 +1,21 @@
 package com.soner.gamebullsandcows;
 
 public class TahminModel {
-
+    private final int sira;
     private final String tahmin;
-    private final int sira; // Yeni alan
+    private final int bulls;
+    private final int cows;
 
-    public TahminModel(int sira, String tahmin) {
+    public TahminModel(int sira, String tahmin, int bulls, int cows) {
         this.sira = sira;
         this.tahmin = tahmin;
-
-    }//end yapılandırıcı
-
-    // Sıra numarasını TableView'a beslemek için Getter
-    public int getSira() {
-        return sira;
+        this.bulls = bulls;
+        this.cows = cows;
     }
 
-    // TableView'ın veriyi okuyabilmesi için Getter metodu ŞARTTIR.
-    public String getTahmin() {
-        return tahmin;
-    }//end getter
-
-
-}//end class
+    // JavaFX TableView bu metodları (get...) kullanarak veriyi ekrana yansıtır
+    public int getSira() { return sira; }
+    public String getTahmin() { return tahmin; }
+    public int getBulls() { return bulls; }
+    public int getCows() { return cows; }
+}
