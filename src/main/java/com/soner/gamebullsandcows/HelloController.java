@@ -15,6 +15,10 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import java.util.function.UnaryOperator;
+
 public class HelloController {
 
     @FXML private Label lblStatus;
@@ -37,6 +41,32 @@ public class HelloController {
 
     @FXML
     public void initialize() {
+
+
+        UnaryOperator<TextFormatter.Change> bullAndCowFilter = change -> {
+            String newText = change.getControlNewText();
+
+            // 1. Şart: Boş metne izin ver (silme işlemi için)
+            if (newText.isEmpty()) {
+                return change;
+            }
+
+            // 2. Şart: Sadece rakam mı? Ve Uzunluk 4'ü geçiyor mu?
+            if (!newText.matches("\\d*") || newText.length() > 4) {
+                return null;
+            }
+
+            // 3. Şart: Rakamlar birbirinden farklı mı?
+            if (hasDuplicateDigits(newText)) {
+                return null; // Eğer aynı rakamdan varsa değişikliği reddet
+            }
+
+            return change;
+        };
+
+        txtGuess.setTextFormatter(new TextFormatter<>(bullAndCowFilter));
+
+
         colTurn.setCellValueFactory(new PropertyValueFactory<>("sira"));
         colGuess.setCellValueFactory(new PropertyValueFactory<>("tahmin"));
         colBulls.setCellValueFactory(new PropertyValueFactory<>("bulls"));
@@ -46,7 +76,19 @@ public class HelloController {
 
         setupTimer();
         yeniOyunBaslat();
-    }
+    }//end initialize
+
+    // Yardımcı metod: Tekrarlanan rakam kontrolü text field içinde daha kullanıcı rakam girerken kullanılacak
+    private boolean hasDuplicateDigits(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            for (int j = i + 1; j < s.length(); j++) {
+                if (s.charAt(i) == s.charAt(j)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }//end hasDuplicateDigits
 
     private void setupTimer() {
         if (timeline != null) timeline.stop();
@@ -133,5 +175,5 @@ public class HelloController {
     @FXML
     void onResetGame(ActionEvent event) {
         yeniOyunBaslat();
-    }
-}
+    }//end onResetGame
+}//end class
